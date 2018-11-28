@@ -1,7 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PresentationalComponent from './PresentationalComponent';
+import Form from './Form';
+import ForumPosts from './ForumPosts';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Moment from 'moment';
 
 class ContainerComponent extends React.Component{
 
@@ -9,28 +11,26 @@ class ContainerComponent extends React.Component{
     super(props);
     this.state = {
     };
-    this.handleMutateStateFunction = this.handleMutateStateFunction.bind(this);
   }
 
-  handleMutateStateFunction() {
-    const { dispatch } = this.props;
-    const action = {
-      type: 'ADD_CLICK',
-    };
-    dispatch(action);
-  }
-
-  render(){
+  render(props) {
     return (
       <div>
-        <PresentationalComponent
-          onMutateStateFunction={this.handleMutateStateFunction}
-          clicks={this.props.numberOfClicks}
-        />
+        {this.props.idArray.map(formId => {
+          let form = this.props.masterPostsList[formId];
+          return <ForumPosts
+            message={form.message}
+            upvotes={form.upvotes}
+            downvotes={form.downvotes}
+            time={(form.time).fromNow(true)}
+            id={formId}
+            key={formId}
+          />;
+        })}
+        <Form/>
       </div>
     );
   }
-
 }
 
 ContainerComponent.propTypes = {
@@ -38,8 +38,15 @@ ContainerComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
+  let idArray = Object.keys(state);
+
+  idArray = idArray.sort(function(id1, id2) {
+    return  state[id2].upvotes - state[id1].upvotes
+  });
+
   return {
-    numberOfClicks: state.numberOfClicks
+    masterPostsList: state,
+    idArray: idArray
   };
 };
 

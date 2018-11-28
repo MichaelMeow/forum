@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 
 const store = createStore(reducer);
 
-
 const render = (Component) => {
   ReactDOM.render(
     <HashRouter>

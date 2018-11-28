@@ -1,5 +1,3 @@
-const defaultState = {
-  numberOfClicks: 0
-};
+const defaultState = {};
 
 export default defaultState;
